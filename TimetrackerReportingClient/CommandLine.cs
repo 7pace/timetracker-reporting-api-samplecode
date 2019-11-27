@@ -23,13 +23,7 @@ namespace TimetrackerReportingClient
         [Option( 't', HelpText = "Token for Timetracker API (VSTS usage)" )]
         public string Token { get; set; }
 
-        [Option( 'a', Default = null, HelpText = "Comma separated list of TFS fields, e.g. System.Tags,System.Title" )]
-        public IEnumerable<string> TfsFields { get; set; }
-
-        [Option( 'f', HelpText = "TFS URL with collection part" )]
-        public string TfsUrl { get; set; }
-
-        [Option( 'v', HelpText = "VSTS personal token, when additional fields are provided" )]
-        public string VstsToken { get; set; }
+        [Option( 'c', Default = null, HelpText = "Comma separated list of work item's custom fields, e.g. System.RemoteLinkCount,System.CommentCount,System.IterationLevel1 ")]
+        public IEnumerable<string> CustomFields { get; set; }
     }
 }

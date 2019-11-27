@@ -27,7 +27,7 @@ namespace TimetrackerReportingClient
                 parsed = true;
                 cmd = x;
             })
-                       .WithNotParsed(x => { Console.WriteLine("Check https://github.com/7pace/timetracker-api-samplecode to get samples of usage"); });
+                       .WithNotParsed(x => { Console.WriteLine("Check https://github.com/7pace/timetracker-reporting-api-samplecode to get samples of usage"); });
 
             if (!parsed)
             {
@@ -40,58 +40,37 @@ namespace TimetrackerReportingClient
                 ? new TimetrackerOdataContext(cmd.ServiceUri)
                 : new TimetrackerOdataContext(cmd.ServiceUri, cmd.Token);
 
+            // request for work items with worklogs
             var workLogsWorkItemsExport = context.Container.workLogsWorkItems;
-
-            //TODO: DEFINE DATE PERIOD HERE
-            // Perform query for 3 last months
-            Dictionary<string, ReportingWorkLogWorkItem[]> workLogsWorkItemsExportResult = workLogsWorkItemsExport
+            //fills custom fields values if provided. Check https://support.7pace.com/hc/en-us/articles/360035502332-Reporting-API-Overview#user-content-customfields to get more information
+            if (cmd.CustomFields != null && cmd.CustomFields.Any())
+            {
+                workLogsWorkItemsExport = workLogsWorkItemsExport.AddQueryOption("customFields", string.Join(",", cmd.CustomFields));
+            }
+            var workLogsWorkItemsExportResult = workLogsWorkItemsExport
+                // Perform query for 3 last months
                 .Where(s => s.Timestamp > DateTime.Today.AddMonths(-3) && s.Timestamp < DateTime.Today)
-                .GroupBy(g => g.WorklogDate.ShortDate)
-                .ToDictionary(k => k.Key, v => v.ToArray());
-
-            var rows = ExtendWithAdditionalFields(cmd, workLogsWorkItemsExportResult);
+                // orfer items by worklog date
+                .OrderByDescending(g => g.WorklogDate.ShortDate).ToArray();
             // Print out the result
-            foreach (var row in rows)
-            {
-                Console.WriteLine("{0:g} {1} {2}", row.TimetrackerRow.Timestamp, row.TimetrackerRow.User.Name, row.TimetrackerRow.PeriodLength);
-            }
-
-            Export(cmd.Format, rows);
-        }
-
-        public static List<ExtendedTimetrackerRow> ExtendWithAdditionalFields(CommandLineOptions options, Dictionary<string, ReportingWorkLogWorkItem[]> workLogsWorkItemsExportResult)
-        {
-            var extender = new TFSExtender(options.TfsUrl, options.VstsToken);
-
-            var extendedData = new List<ExtendedTimetrackerRow>();
-
-            string[] tfsFields = new string[0];
-            if (options.TfsFields != null)
-            {
-                tfsFields = options.TfsFields.ToArray();
-            }
-
             foreach (var row in workLogsWorkItemsExportResult)
             {
-                var extendedRow = new ExtendedTimetrackerRow
-                {
-                    TimetrackerRow = row
-                };
-
-                extendedData.Add(extendedRow);
-
-                if (!row.WorkItemId.HasValue)
-                {
-                    continue;
-                }
-
-                extendedRow.ExtendData = extender.GetTfsItemData(row.WorkItemId.Value, tfsFields);
+                Console.WriteLine("{0:g} {1} {2}", row.WorklogDate.ShortDate, row.User.Name, row.PeriodLength);
             }
+            Export(cmd.Format, workLogsWorkItemsExportResult, "workLogsWorkItemsExport");
 
-            return extendedData;
+
+            // request for work items with its hierarchy
+            var workItemsHierarchyExport = context.Container.workItemsHierarchy;
+            // fills rollup field with the sum of specified numeric field of work item and its children. Check https://support.7pace.com/hc/en-us/articles/360035502332-Reporting-API-Overview#rollupFields to get more information
+            workItemsHierarchyExport = workItemsHierarchyExport.AddQueryOption("rollupFields", "Microsoft.VSTS.Scheduling.CompletedWork");
+            var workItemsHierarchyExportResult = workItemsHierarchyExport
+                // Perform query for 3 last months
+                .Where(s => s.System_CreatedDate > DateTime.Today.AddMonths(-3) && s.System_CreatedDate < DateTime.Today).ToArray();
+            Export(cmd.Format, workItemsHierarchyExportResult, "workItemsHierarchyExport");
         }
 
-        public static void Export(string format, List<ExtendedTimetrackerRow> extendedData)
+        public static void Export(string format, object extendedData, string fileName)
         {
             if (string.IsNullOrEmpty(format))
             {
@@ -111,7 +90,7 @@ namespace TimetrackerReportingClient
                     // Configure...
                     .Create();
 
-                var exportPath = directory + "/export.xml";
+                var exportPath = directory + $"/{fileName}.xml";
 
                 var file = File.OpenWrite(exportPath);
                 var settings = new XmlWriterSettings { Indent = true };
@@ -130,7 +109,7 @@ namespace TimetrackerReportingClient
             else if (format == "json")
             {
                 var json = JsonConvert.SerializeObject(extendedData, Formatting.Indented);
-                var exportPath = directory + "/export.json";
+                var exportPath = directory + $"/{fileName}.json";
                 File.WriteAllText(exportPath, json);
             }
             else
@@ -138,12 +117,5 @@ namespace TimetrackerReportingClient
                 throw new NotSupportedException("Provided format is not supported: " + format);
             }
         }
-    }
-
-    [Serializable]
-    public class ExtendedTimetrackerRow
-    {
-        public ReportingWorkLogWorkItem TimetrackerRow { get; set; }
-        public Dictionary<string, string> ExtendData { get; set; }
     }
 }

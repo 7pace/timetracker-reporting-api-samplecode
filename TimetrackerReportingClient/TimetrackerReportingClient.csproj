@@ -78,7 +78,6 @@
     <Compile Include="Connected Services\TimetrackerProxy\TimetrackerProxy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TFSExtender.cs" />
     <Compile Include="TimetrackerOdataContext.cs" />
   </ItemGroup>
   <ItemGroup>
