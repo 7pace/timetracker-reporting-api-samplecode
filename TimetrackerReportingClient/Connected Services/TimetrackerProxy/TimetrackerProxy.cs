@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 11/26/2019 10:43:54 AM
+// Generation date: 12/2/2019 11:03:24 AM
 namespace TimetrackerOnline.Reporting.Models
 {
     /// <summary>
@@ -4582,10 +4582,6 @@ namespace TimetrackerOnline.Reporting.Models
         /// <summary>
         /// Create a new ReportingWorkLogWorkItem object.
         /// </summary>
-        /// <param name="user">Initial value of User.</param>
-        /// <param name="activityType">Initial value of ActivityType.</param>
-        /// <param name="addedByUser">Initial value of AddedByUser.</param>
-        /// <param name="workItem">Initial value of WorkItem.</param>
         /// <param name="ID">Initial value of Id.</param>
         /// <param name="timestamp">Initial value of Timestamp.</param>
         /// <param name="periodLength">Initial value of PeriodLength.</param>
@@ -4599,11 +4595,7 @@ namespace TimetrackerOnline.Reporting.Models
         /// <param name="isFromApi">Initial value of IsFromApi.</param>
         /// <param name="isBillable">Initial value of IsBillable.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.6.0")]
-        public static ReportingWorkLogWorkItem CreateReportingWorkLogWorkItem(global::TimetrackerOnline.Reporting.Models.ReportingUser user, 
-                    global::TimetrackerOnline.Reporting.Models.ReportingActivityType activityType, 
-                    global::TimetrackerOnline.Reporting.Models.ReportingUser addedByUser, 
-                    global::TimetrackerOnline.Reporting.Models.ReportingWorkItem workItem, 
-                    global::System.Guid ID, 
+        public static ReportingWorkLogWorkItem CreateReportingWorkLogWorkItem(global::System.Guid ID, 
                     global::System.DateTimeOffset timestamp, 
                     int periodLength, 
                     global::System.DateTimeOffset editedTimestamp, 
@@ -4617,26 +4609,6 @@ namespace TimetrackerOnline.Reporting.Models
                     bool isBillable)
         {
             ReportingWorkLogWorkItem reportingWorkLogWorkItem = new ReportingWorkLogWorkItem();
-            if ((user == null))
-            {
-                throw new global::System.ArgumentNullException("user");
-            }
-            reportingWorkLogWorkItem.User = user;
-            if ((activityType == null))
-            {
-                throw new global::System.ArgumentNullException("activityType");
-            }
-            reportingWorkLogWorkItem.ActivityType = activityType;
-            if ((addedByUser == null))
-            {
-                throw new global::System.ArgumentNullException("addedByUser");
-            }
-            reportingWorkLogWorkItem.AddedByUser = addedByUser;
-            if ((workItem == null))
-            {
-                throw new global::System.ArgumentNullException("workItem");
-            }
-            reportingWorkLogWorkItem.WorkItem = workItem;
             reportingWorkLogWorkItem.Id = ID;
             reportingWorkLogWorkItem.Timestamp = timestamp;
             reportingWorkLogWorkItem.PeriodLength = periodLength;
@@ -9951,11 +9923,11 @@ namespace Default
         <Key>
           <PropertyRef Name=""Id"" />
         </Key>
-        <Property Name=""User"" Type=""TimetrackerOnline.Reporting.Models.ReportingUser"" Nullable=""false"" />
-        <Property Name=""ActivityType"" Type=""TimetrackerOnline.Reporting.Models.ReportingActivityType"" Nullable=""false"" />
-        <Property Name=""AddedByUser"" Type=""TimetrackerOnline.Reporting.Models.ReportingUser"" Nullable=""false"" />
+        <Property Name=""User"" Type=""TimetrackerOnline.Reporting.Models.ReportingUser"" />
+        <Property Name=""ActivityType"" Type=""TimetrackerOnline.Reporting.Models.ReportingActivityType"" />
+        <Property Name=""AddedByUser"" Type=""TimetrackerOnline.Reporting.Models.ReportingUser"" />
         <Property Name=""Budget"" Type=""TimetrackerOnline.Reporting.Models.ReportingBudget"" />
-        <Property Name=""WorkItem"" Type=""TimetrackerOnline.Reporting.Models.ReportingWorkItem"" Nullable=""false"" />
+        <Property Name=""WorkItem"" Type=""TimetrackerOnline.Reporting.Models.ReportingWorkItem"" />
         <Property Name=""Id"" Type=""Edm.Guid"" Nullable=""false"" />
         <Property Name=""UserId"" Type=""Edm.Guid"" />
         <Property Name=""AddedByUserId"" Type=""Edm.Guid"" />

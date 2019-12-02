@@ -14,8 +14,8 @@
     "IncludeExtensionsT4File": false,
     "GenerateOperationImports": false,
     "ServiceName": "TimetrackerProxy",
-    "AcceptAllUntrustedCertificates": true,
-    "Endpoint": "D:\\Work\\7pace\\$metadata.xml",
+    "AcceptAllUntrustedCertificates": false,
+    "Endpoint": "https://sample.com/api/odata/v3.0/$metadata",
     "EdmxVersion": {
       "Major": 4,
       "Minor": 0,
