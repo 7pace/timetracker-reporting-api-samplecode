@@ -40,6 +40,7 @@ namespace TimetrackerReportingClient
                 ? new TimetrackerOdataContext(cmd.ServiceUri)
                 : new TimetrackerOdataContext(cmd.ServiceUri, cmd.Token);
 
+            Console.WriteLine("\r\nRequest execution for work items with worklogs");
             // request for work items with worklogs
             var workLogsWorkItemsExport = context.Container.workLogsWorkItems;
             //fills custom fields values if provided. Check https://support.7pace.com/hc/en-us/articles/360035502332-Reporting-API-Overview#user-content-customfields to get more information
@@ -52,6 +53,8 @@ namespace TimetrackerReportingClient
                 .Where(s => s.Timestamp > DateTime.Today.AddMonths(-3) && s.Timestamp < DateTime.Today)
                 // orfer items by worklog date
                 .OrderByDescending(g => g.WorklogDate.ShortDate).ToArray();
+            Console.WriteLine("\r\nRequest is successed. Press enter to display the result and export result to a file.");
+            Console.ReadLine();
             // Print out the result
             foreach (var row in workLogsWorkItemsExportResult)
             {
@@ -59,7 +62,9 @@ namespace TimetrackerReportingClient
             }
             Export(cmd.Format, workLogsWorkItemsExportResult, "workLogsWorkItemsExport");
 
-
+            Console.WriteLine($"\r\nExport to file workLogsWorkItemsExport.{cmd.Format} completed");
+            Console.WriteLine("\r\nPress enter to start query execution for work items with their hierarchy");
+            Console.ReadLine();
             // request for work items with its hierarchy
             var workItemsHierarchyExport = context.Container.workItemsHierarchy;
             // fills rollup field with the sum of specified numeric field of work item and its children. Check https://support.7pace.com/hc/en-us/articles/360035502332-Reporting-API-Overview#rollupFields to get more information
@@ -67,7 +72,10 @@ namespace TimetrackerReportingClient
             var workItemsHierarchyExportResult = workItemsHierarchyExport
                 // Perform query for 3 last months
                 .Where(s => s.System_CreatedDate > DateTime.Today.AddMonths(-3) && s.System_CreatedDate < DateTime.Today).ToArray();
+            Console.WriteLine("Request is successed. Press enter to export result to a file.");
             Export(cmd.Format, workItemsHierarchyExportResult, "workItemsHierarchyExport");
+            Console.WriteLine($"\r\nExport to file workItemsHierarchyExport.{cmd.Format} completed. Press enter to exit the program");
+            Console.ReadLine();
         }
 
         public static void Export(string format, object extendedData, string fileName)
