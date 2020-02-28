@@ -9,10 +9,10 @@ Reporting API Overview documentation: https://support.7pace.com/hc/en-us/article
 
 ## TimetrackerReportingClient usage
 
-This is a sample of the console application which connects to VSTS or On-premise version of Timetracker and returns all work items with time records for last 3 months.
+This is a sample of the console application which connects to DevOps (former VSTS) or DevOps Server (On-premise, former TFS) version of Timetracker and returns all work items with time records for last 3 months.
 Command line parameters:
 
-VSTS usage (token auth): 
+DevOps usage (token auth): 
 ```
 TimetrackerReportingClient.exe ServiceURI -t Token -c System.RemoteLinkCount,System.CommentCount,System.IterationLevel1 -x json
 ```
@@ -23,7 +23,7 @@ TimetrackerReportingClient.exe ServiceURI -w -c System.RemoteLinkCount,System.Co
 ```
 ## Parameters
 
-|   | TFS  | VSTS  |
+|   | DevOps Server  | DevOps  |
 |---|---|---|
 | ServiceUri  | [timetrackerServiceUrl:Port]/api/[CollectionName]/odata/v3.0  |  https://[accountName].timehub.7pace.com/api/odata/v3.0 |
 | -t  | -  | API Token  |
